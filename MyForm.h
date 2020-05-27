@@ -40,7 +40,7 @@ namespace kursgraf1 {
 		bool opponent_is_server = false;
 		Game_Field* game_field;
 
-	private: System::Windows::Forms::PictureBox^ pictureBox1;
+
 	private: System::Windows::Forms::Button^ button1;
 	private: System::Windows::Forms::TextBox^ textBoxMessage;
 	private: System::Windows::Forms::RadioButton^ radioButtonServer;
@@ -51,6 +51,7 @@ namespace kursgraf1 {
 	private: System::Windows::Forms::TextBox^ textBoxTurn;
 	private: System::Windows::Forms::Label^ labelCursCoordX;
 	private: System::Windows::Forms::Label^ labelCursCoordY;
+	private: System::Windows::Forms::PictureBox^ pictureBox1;
 
 	protected:
 
@@ -84,10 +85,11 @@ namespace kursgraf1 {
 			// 
 			// pictureBox1
 			// 
-			this->pictureBox1->Enabled = false;
+			this->pictureBox1->BackColor = System::Drawing::Color::White;
+			this->pictureBox1->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
 			this->pictureBox1->Location = System::Drawing::Point(28, 133);
 			this->pictureBox1->Name = L"pictureBox1";
-			this->pictureBox1->Size = System::Drawing::Size(586, 371);
+			this->pictureBox1->Size = System::Drawing::Size(600, 400);
 			this->pictureBox1->TabIndex = 0;
 			this->pictureBox1->TabStop = false;
 			this->pictureBox1->Click += gcnew System::EventHandler(this, &MyForm::pictureBox1_Click);
@@ -200,7 +202,8 @@ namespace kursgraf1 {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(892, 516);
+			this->BackColor = System::Drawing::SystemColors::ButtonHighlight;
+			this->ClientSize = System::Drawing::Size(892, 552);
 			this->Controls->Add(this->labelCursCoordY);
 			this->Controls->Add(this->labelCursCoordX);
 			this->Controls->Add(this->textBoxTurn);

@@ -5,6 +5,7 @@
 using namespace kursgraf1; // Название проекта
 using namespace System;
 using namespace System::Windows::Forms;
+using namespace System::Drawing;
 
 [STAThreadAttribute]
 void main(array <String^>^ args) {
@@ -51,12 +52,27 @@ System::Void kursgraf1::MyForm::buttonSave_Click(System::Object^ sender, System:
 
 System::Void kursgraf1::MyForm::pictureBox1_Click(System::Object^ sender, System::EventArgs^ e)
 {
+	int Pict_X = MyForm::pictureBox1->Location.X;
+	int Pict_Y = MyForm::pictureBox1->Location.Y;
+	int cell_x = (int)MyForm::pictureBox1->Width;
+	int cell_y = (int)MyForm::pictureBox1->Height;
+
+	//Graphics^ g = Graphics::FromHwnd(this->Handle);
+	//g->FillRectangle(Brushes::Black, Pict_X-1, Pict_Y-1, 602, 402);
+	//g->FillRectangle(Brushes::White, Pict_X, Pict_Y, 600, 400);
+	
 	int Curs_X = Cursor->Position.X;
 	int Curs_Y = Cursor->Position.Y;
 	int Imag_position_X = MyForm::pictureBox1->Location.X + MyForm::Location.X;
 	int Imag_position_Y = MyForm::pictureBox1->Location.Y + MyForm::Location.Y;
-
-	MyForm::labelCursCoordX->Text = Imag_position_X.ToString();
+	
+	MyForm::labelCursCoordX->Text = Curs_X.ToString();
 	MyForm::labelCursCoordY->Text = Imag_position_Y.ToString();
 	MyForm::pictureBox1->Refresh();
+	
+	//g->FillRectangle(Brushes::Black, 100, 100, 200, 133);
+	//g->FillRectangle(Brushes::Black, 100, 100, 200, 133);
+
+	Graphics^ ris = MyForm::pictureBox1->CreateGraphics();
+	ris->FillRectangle(Brushes::Black, 0, 0, 200, 133);
 }
