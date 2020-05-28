@@ -38,9 +38,11 @@ namespace kursgraf1 {
 
 		int size_of_field = 0;
 		bool opponent_is_server = false;
-		Game_Field* game_field;
+		
+		int cell_height = 0;
+		int cell_width = 0;
 
-
+	private: Game_Field* game_field;
 	private: System::Windows::Forms::Button^ button1;
 	private: System::Windows::Forms::TextBox^ textBoxMessage;
 	private: System::Windows::Forms::RadioButton^ radioButtonServer;
