@@ -35,14 +35,15 @@ namespace kursgraf1 {
 				delete components;
 			}
 		}
-
+		int player_turn = 1;
+		Game_Field& game_field = Game_Field::getInstance();
 		int size_of_field = 0;
 		bool opponent_is_server = false;
-		
+
 		int cell_height = 0;
 		int cell_width = 0;
 
-	private: Game_Field* game_field;
+
 	private: System::Windows::Forms::Button^ button1;
 	private: System::Windows::Forms::TextBox^ textBoxMessage;
 	private: System::Windows::Forms::RadioButton^ radioButtonServer;
@@ -50,9 +51,9 @@ namespace kursgraf1 {
 	private: System::Windows::Forms::GroupBox^ groupBoxOpponent;
 	private: System::Windows::Forms::TextBox^ textBoxSize;
 	private: System::Windows::Forms::Button^ buttonSave;
-	private: System::Windows::Forms::TextBox^ textBoxTurn;
-	private: System::Windows::Forms::Label^ labelCursCoordX;
-	private: System::Windows::Forms::Label^ labelCursCoordY;
+
+
+
 	private: System::Windows::Forms::PictureBox^ pictureBox1;
 
 	protected:
@@ -61,7 +62,7 @@ namespace kursgraf1 {
 		/// <summary>
 		/// Обязательная переменная конструктора.
 		/// </summary>
-		System::ComponentModel::Container ^components;
+		System::ComponentModel::Container^ components;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -78,9 +79,6 @@ namespace kursgraf1 {
 			this->groupBoxOpponent = (gcnew System::Windows::Forms::GroupBox());
 			this->buttonSave = (gcnew System::Windows::Forms::Button());
 			this->textBoxSize = (gcnew System::Windows::Forms::TextBox());
-			this->textBoxTurn = (gcnew System::Windows::Forms::TextBox());
-			this->labelCursCoordX = (gcnew System::Windows::Forms::Label());
-			this->labelCursCoordY = (gcnew System::Windows::Forms::Label());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			this->groupBoxOpponent->SuspendLayout();
 			this->SuspendLayout();
@@ -89,16 +87,16 @@ namespace kursgraf1 {
 			// 
 			this->pictureBox1->BackColor = System::Drawing::Color::White;
 			this->pictureBox1->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
-			this->pictureBox1->Location = System::Drawing::Point(28, 133);
+			this->pictureBox1->Location = System::Drawing::Point(38, 133);
 			this->pictureBox1->Name = L"pictureBox1";
-			this->pictureBox1->Size = System::Drawing::Size(600, 400);
+			this->pictureBox1->Size = System::Drawing::Size(600, 500);
 			this->pictureBox1->TabIndex = 0;
 			this->pictureBox1->TabStop = false;
 			this->pictureBox1->Click += gcnew System::EventHandler(this, &MyForm::pictureBox1_Click);
 			// 
 			// button1
 			// 
-			this->button1->Location = System::Drawing::Point(755, 30);
+			this->button1->Location = System::Drawing::Point(631, 24);
 			this->button1->Name = L"button1";
 			this->button1->Size = System::Drawing::Size(72, 32);
 			this->button1->TabIndex = 1;
@@ -108,14 +106,15 @@ namespace kursgraf1 {
 			// 
 			// textBoxMessage
 			// 
+			this->textBoxMessage->BackColor = System::Drawing::Color::White;
 			this->textBoxMessage->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->textBoxMessage->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->textBoxMessage->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->textBoxMessage->Location = System::Drawing::Point(12, 12);
+			this->textBoxMessage->Location = System::Drawing::Point(108, 12);
 			this->textBoxMessage->Name = L"textBoxMessage";
 			this->textBoxMessage->ReadOnly = true;
 			this->textBoxMessage->ShortcutsEnabled = false;
-			this->textBoxMessage->Size = System::Drawing::Size(242, 22);
+			this->textBoxMessage->Size = System::Drawing::Size(242, 19);
 			this->textBoxMessage->TabIndex = 2;
 			this->textBoxMessage->Text = L"Enter game parameters:";
 			// 
@@ -148,7 +147,7 @@ namespace kursgraf1 {
 			this->groupBoxOpponent->Controls->Add(this->textBoxSize);
 			this->groupBoxOpponent->Controls->Add(this->radioButtonPeople);
 			this->groupBoxOpponent->Controls->Add(this->radioButtonServer);
-			this->groupBoxOpponent->Location = System::Drawing::Point(45, 45);
+			this->groupBoxOpponent->Location = System::Drawing::Point(38, 45);
 			this->groupBoxOpponent->Name = L"groupBoxOpponent";
 			this->groupBoxOpponent->Size = System::Drawing::Size(541, 82);
 			this->groupBoxOpponent->TabIndex = 5;
@@ -173,42 +172,12 @@ namespace kursgraf1 {
 			this->textBoxSize->TabIndex = 5;
 			this->textBoxSize->Text = L"Enter size of board";
 			// 
-			// textBoxTurn
-			// 
-			this->textBoxTurn->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, static_cast<System::Drawing::FontStyle>((System::Drawing::FontStyle::Italic | System::Drawing::FontStyle::Underline)),
-				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(204)));
-			this->textBoxTurn->Location = System::Drawing::Point(644, 153);
-			this->textBoxTurn->Name = L"textBoxTurn";
-			this->textBoxTurn->Size = System::Drawing::Size(168, 22);
-			this->textBoxTurn->TabIndex = 6;
-			// 
-			// labelCursCoordX
-			// 
-			this->labelCursCoordX->AutoSize = true;
-			this->labelCursCoordX->Location = System::Drawing::Point(661, 227);
-			this->labelCursCoordX->Name = L"labelCursCoordX";
-			this->labelCursCoordX->Size = System::Drawing::Size(47, 13);
-			this->labelCursCoordX->TabIndex = 7;
-			this->labelCursCoordX->Text = L"Cursor X";
-			// 
-			// labelCursCoordY
-			// 
-			this->labelCursCoordY->AutoSize = true;
-			this->labelCursCoordY->Location = System::Drawing::Point(661, 257);
-			this->labelCursCoordY->Name = L"labelCursCoordY";
-			this->labelCursCoordY->Size = System::Drawing::Size(47, 13);
-			this->labelCursCoordY->TabIndex = 8;
-			this->labelCursCoordY->Text = L"Cursor Y";
-			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::SystemColors::ButtonHighlight;
-			this->ClientSize = System::Drawing::Size(892, 552);
-			this->Controls->Add(this->labelCursCoordY);
-			this->Controls->Add(this->labelCursCoordX);
-			this->Controls->Add(this->textBoxTurn);
+			this->ClientSize = System::Drawing::Size(745, 648);
 			this->Controls->Add(this->groupBoxOpponent);
 			this->Controls->Add(this->textBoxMessage);
 			this->Controls->Add(this->button1);
@@ -225,11 +194,11 @@ namespace kursgraf1 {
 		}
 #pragma endregion
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
-	
 
-private: System::Void radioButtonServer_CheckedChanged(System::Object^ sender, System::EventArgs^ e);
-private: System::Void radioButtonPeople_CheckedChanged(System::Object^ sender, System::EventArgs^ e);
-private: System::Void buttonSave_Click(System::Object^ sender, System::EventArgs^ e);
-private: System::Void pictureBox1_Click(System::Object^ sender, System::EventArgs^ e);
-};
+
+	private: System::Void radioButtonServer_CheckedChanged(System::Object^ sender, System::EventArgs^ e);
+	private: System::Void radioButtonPeople_CheckedChanged(System::Object^ sender, System::EventArgs^ e);
+	private: System::Void buttonSave_Click(System::Object^ sender, System::EventArgs^ e);
+	private: System::Void pictureBox1_Click(System::Object^ sender, System::EventArgs^ e);
+	};
 }

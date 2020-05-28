@@ -3,52 +3,65 @@
 #include <time.h>
 #include "ClassField.h"
 
+#include <Windows.h>
+#include "ClassField.h"
 
 using namespace std;
+using namespace System;
+using namespace System::Windows::Forms;
 
 Game_Field::Game_Field() {
 	srand(time(NULL));
-	int RealSize;
-	int player;
-	cout << "Enter size of squared field (NxN): ";
-	cin >> Size_of_Field;
-	RealSize = Size_of_Field * Size_of_Field;
-	cell = new Cells[RealSize];
-	for (int i = 0; i < RealSize; i++)
-	{
+	Size_of_Field = 0;
+	second_player_is_server = false;
+	cell = NULL;
+}
+
+Game_Field& Game_Field::getInstance()
+{
+	static Game_Field object;
+
+	return object;
+}
+
+void Game_Field::change_size_of_field(int new_size)
+{
+	delete[] cell;
+	Size_of_Field = new_size;
+	int Real_size = new_size * new_size;
+	cell = new Cells[Real_size];
+	for (int i = 0; i < Real_size; i++) {
 		cell[i].isFilled = false;
-		cell[i].value = -1;
 	}
-	cout << "Sekond player is:" << endl << "1 - server" << endl << "0 - people" << endl;
-	cin >> player;
-	if (player == 1)
-		second_player_is_server = true;
-	else
-		second_player_is_server = false;
 }
 
 Game_Field::~Game_Field() {
-	delete [] cell;
+	delete[] cell;
 }
 
-void Game_Field::print_field() {
-	int RealSize = Size_of_Field * Size_of_Field;
-	for (int i = 0; i < RealSize; i++)
-	{
-		if(cell[i].value!=-1)
-			cout << cell[i].value << "  |  ";
-		else
-			cout << " " << "  |  ";
-		if ((i % Size_of_Field) == (Size_of_Field-1))
-			cout << endl;
+bool Game_Field::is_filled() {
+	int real_size = Size_of_Field * Size_of_Field;
+	for (int i = 0; i < real_size; i++) {
+		if (cell[i].isFilled == false) {
+			return false;
+		}
 	}
+	return true;
+}
+
+void Game_Field::set_opponent(bool opponent_type) {
+	second_player_is_server = opponent_type;
+}
+
+bool Game_Field::opponent_is_server()
+{
+	return second_player_is_server;
 }
 
 bool Game_Field::set_cell_value(int x, int y, int value) {
-	int cell_position = (x - 1) * Size_of_Field + (y - 1);
+	int cell_position = x * Size_of_Field + y;
 	if (cell[cell_position].isFilled)
 	{
-		cout << "Cell is just filled. Choose another cell." << endl;
 		return false;
 	}
 	else
@@ -59,11 +72,13 @@ bool Game_Field::set_cell_value(int x, int y, int value) {
 	}
 }
 
-void Game_Field::game_process()
+/*void Game_Field::game_process(int size)
 {
+	change_size_of_field(size);
 	int count_of_cells = Size_of_Field * Size_of_Field;
 	for (int i = 0; i < count_of_cells; i++)
 	{
+
 		if (i % 2 == 0)
 			move_of_player(1);
 		else
@@ -73,10 +88,9 @@ void Game_Field::game_process()
 				move_of_player(2);
 
 		system("cls");
-		print_field();
 	}
 	count_even_summs();
-}
+}*/
 
 void Game_Field::move_of_player(int player_number)
 {
@@ -92,10 +106,11 @@ void Game_Field::move_of_player(int player_number)
 	} while (!set_is_successfull);
 }
 
-int Game_Field::choose_coordinate(int coord){
+int Game_Field::choose_coordinate(int coord) {
 	int a;
+
 	do {
-		if(coord==0)
+		if (coord == 0)
 			cout << "Choose row: ";
 		else
 			cout << "Choose column: ";
@@ -103,7 +118,7 @@ int Game_Field::choose_coordinate(int coord){
 		if (a <= 0 || a > Size_of_Field)
 		{
 			system("cls");
-			if(coord==0)
+			if (coord == 0)
 				cout << "You exeeded maximum! Enter correct row!" << endl;
 			else
 				cout << "You exeeded maximum! Enter correct column!" << endl;
@@ -112,17 +127,19 @@ int Game_Field::choose_coordinate(int coord){
 	return a;
 }
 
-void Game_Field::move_of_server() {
+void Game_Field::move_of_server(int* x, int* y) {
 	bool successfull_set;
 	int coordinate_x, coordinate_y;
 	do {
-		coordinate_x = (rand() % Size_of_Field) + 1;
-		coordinate_y = (rand() % Size_of_Field) + 1;
+		coordinate_x = (rand() % Size_of_Field);
+		coordinate_y = (rand() % Size_of_Field);
 		successfull_set = set_cell_value(coordinate_x, coordinate_y, false);
 	} while (!successfull_set);
+	(*x) = coordinate_x;
+	(*y) = coordinate_y;
 }
 
-void Game_Field::count_even_summs() //число четных сумм
+int Game_Field::count_even_summs() //число четных сумм
 {
 	int global_even_count, global_odd_count, summ_count_lines, rows, columns, diags;
 
@@ -133,19 +150,16 @@ void Game_Field::count_even_summs() //число четных сумм
 	global_even_count = rows + columns + diags;
 	summ_count_lines = 2 * Size_of_Field + (2 * Size_of_Field - 1);
 	global_odd_count = summ_count_lines - global_even_count;
-	cout << "Results:" <<endl << "Even sums: " << global_even_count << endl;
-	cout << "Odd sums: " << global_odd_count << endl;
 	if (global_even_count > global_odd_count)
-		cout << "Second player win!" << endl;
+		return 2;
 	else if (global_odd_count > global_even_count)
-		cout << "First player win!" << endl;
+		return 1;
 	else
-		cout << "Draw!" << endl;
-	system("pause");
+		return 0;
 }
 
 int Game_Field::count_rows() {
-	int sum, count=0;
+	int sum, count = 0;
 	int number;
 	for (int i = 0; i < Size_of_Field; i++) {
 		sum = 0;
@@ -180,7 +194,7 @@ int Game_Field::count_diags() {
 	int count = 0, sum;
 	int i, j;
 	int number;
-	
+
 	for (int k = 1; k <= Size_of_Field; k++) //upper triangle and main diag
 	{
 		sum = 0;
